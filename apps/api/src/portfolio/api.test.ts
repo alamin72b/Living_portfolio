@@ -285,6 +285,65 @@ describe('Real Nest HTTP API with PostgreSQL-compatible persistence', () => {
     await publish(rollback);
     expect((await http.get(`/api/v1/pieces/${parent.entityId}`)).body.title).toBe('Parent project');
   });
+  it('turns an English goal into an accomplishment without losing identity or incoming structure links', async () => {
+    const goalContent: PieceContent = {
+      ...makeContent('Complete an English course'),
+      title: 'Complete an English course',
+      summary: 'Goal: Complete an English course.',
+      area: 'english_communication',
+      stage: 'blueprint',
+      milestone: {
+        state: 'goal',
+        intention: 'Complete an English course',
+        description: 'Build a stronger foundation for communication.',
+        target: 'Finish the selected course honestly.',
+        targetDate: '',
+      },
+      repositoryUrl: '',
+      evidence: [],
+    };
+    const goal = await publish(await create(goalContent));
+    const structure = await publish(
+      await create({
+        ...makeContent('English & Communication'),
+        kind: 'cluster',
+        area: 'english_communication',
+        relationships: [
+          { targetId: goal.entityId, type: 'contains', note: 'An independent English goal.' },
+        ],
+      }),
+    );
+    const accomplishment = await create(
+      {
+        ...goalContent,
+        title: 'Completed an English course',
+        summary: 'Completed an English course.',
+        stage: 'working',
+        milestone: {
+          state: 'accomplishment',
+          achievement: 'Completed the English course.',
+          description: 'Recorded the actual result without adding an unsupported score.',
+          result: 'Completed the final assessment.',
+          completedDate: '2026-10-19',
+        },
+        evidence: [],
+      },
+      goal.entityId,
+      goal.id,
+    );
+    await publish(accomplishment);
+    const live = (await http.get('/api/v1/workspace')).body as Workspace;
+    const realized = live.pieces.find((p) => p.id === goal.entityId)!;
+    expect(realized.id).toBe(goal.entityId);
+    expect(realized.milestone?.state).toBe('accomplishment');
+    expect(realized.milestone?.result).toBe('Completed the final assessment.');
+    expect(realized.evidence).toEqual([]);
+    expect(
+      live.connections.find(
+        (edge) => edge.sourceId === structure.entityId && edge.targetId === goal.entityId,
+      ),
+    ).toBeDefined();
+  });
   it('rejects graph cycles before publication', async () => {
     const a = await publish(await create(makeContent('Dependency A')));
     const b = await publish(
@@ -392,6 +451,27 @@ describe('Real Nest HTTP API with PostgreSQL-compatible persistence', () => {
     expect(response.body.inspectedRepository).toBe(false);
     expect(response.body.draft.content.technologies).toEqual([]);
     expect(response.body.draft.content.relationships).toEqual([]);
+  });
+  it('prepares English goals without requiring a repository or compulsory evidence', async () => {
+    const response = await http
+      .post('/api/v1/admin/ingestions')
+      .auth(AGENT, { type: 'bearer' })
+      .send({
+        area: 'english_communication',
+        milestone: {
+          state: 'goal',
+          intention: 'Give a presentation in English',
+          description: 'Present a software project clearly.',
+          target: 'Deliver it at an appropriate event.',
+          targetDate: '',
+        },
+      })
+      .expect(201);
+    expect(response.body.draft.content.stage).toBe('blueprint');
+    expect(response.body.draft.content.area).toBe('english_communication');
+    expect(response.body.draft.content.evidence).toEqual([]);
+    expect(response.body.draft.content.milestone.intention).toBe('Give a presentation in English');
+    expect(response.body.inspectedRepository).toBe(false);
   });
   it('keeps approval audit access owner-only', async () => {
     await http.get('/api/v1/admin/audit').auth(AGENT, { type: 'bearer' }).expect(403);

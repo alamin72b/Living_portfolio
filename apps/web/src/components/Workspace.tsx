@@ -163,7 +163,7 @@ function WorkspaceInner({
           componentCount: descendants(piece.id, data.connections).size,
           highlight: related.has(piece.id),
         },
-        ariaLabel: `${piece.title}, ${piece.kind}, ${piece.stage}`,
+        ariaLabel: `${piece.title}, ${piece.milestone?.state ?? piece.kind}, ${piece.stage}`,
         selected: selected === piece.id,
         draggable: false,
       })),

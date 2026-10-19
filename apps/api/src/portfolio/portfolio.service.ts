@@ -140,9 +140,10 @@ export class PortfolioService {
         body,
         createdBy: actor,
       });
-      await tx
-        .insert(s.revisionEvidence)
-        .values(evidence.map((e, ordinal) => ({ ...e, revisionId: id, ordinal })));
+      if (evidence.length)
+        await tx
+          .insert(s.revisionEvidence)
+          .values(evidence.map((e, ordinal) => ({ ...e, revisionId: id, ordinal })));
       if (media.length)
         await tx
           .insert(s.revisionMedia)

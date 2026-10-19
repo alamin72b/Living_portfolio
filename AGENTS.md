@@ -90,7 +90,7 @@ Animate stage realization, discovery, relationship emphasis, expansion, and cont
 
 Kinds: `fragment`, `cluster`, `project`. Stages: `blueprint`, `experiment`, `working`, `evolving`. Attribution: `owner`, `ai-infrastructure`, `neutral-demo`.
 
-A piece has title, summary, body, technologies actually used, optional repository/live URLs, public notes, position, evidence, media, and relationships. Evidence includes a claim, optional URL, private review note, and visibility. Media has kind, HTTPS URL, and accessible description. Profiles contain name, headline, introduction, optional email/GitHub.
+A piece has title, summary, body, technologies actually used, optional repository/live URLs, public notes, position, evidence, media, relationships, and an optional `area` (`general` or `english_communication`). English & Communication goals and accomplishments use an optional discriminated `milestone`: a `goal` stores the intention, optional description/target/target date, and remains a blueprint; an `accomplishment` stores the actual achievement, optional description/result/completion date, and uses a realized working/evolving stage. Updating a goal to an accomplishment keeps the same piece ID, position, connections, and revision history. Do not invent targets, dates, scores, certificates, or results. A goal/accomplishment may have zero evidence and is then explicitly owner-attested, not independently verified; ordinary creations still require at least one evidence claim. Evidence includes a claim, optional URL, private review note, and visibility. Media has kind, HTTPS URL, and accessible description. Profiles contain name, headline, introduction, optional email/GitHub.
 
 External URLs require HTTPS without credentials, query parameters, or fragments. The server does not fetch them. Public evidence excludes private entries and strips every review note.
 
@@ -108,9 +108,13 @@ Publish independent constituents first. Create a cluster/project with `contains`
 
 Use the studio or edit `examples/first-creation.draft.json`, replacing all examples with genuine facts. Supply an evidence claim and supporting link or private review note. Select an honest stage. `recommendPosition` suggests an unoccupied location for prepared proposals. Keep private repository URLs out of public link fields. Stop before publishing until owner approval.
 
+For an English & Communication goal, use `examples/english-goal.draft.json` or submit a piece draft with `area: "english_communication"`, `milestone.state: "goal"`, the actual intention, and optional target/date fields. Keep `stage: "blueprint"`, use `kind: "fragment"` for an independent goal, and leave evidence empty when there is no supporting material. A cluster titled “English & Communication” can contain the published goal through an explicit `contains` relationship; do not create unrelated edges or add goals automatically.
+
 ## 19. Update an existing project
 
 Read `/admin/pieces/:id` for its complete current revision, including private evidence. Keep the `pieceId` and use its revision ID as `baseRevisionId`. Submit complete revised content while preserving unchanged media and outgoing relationships. Public output has redacted evidence and is not a safe source for a complete replacement. An outdated base returns 409. Rollback creates a new draft from history and requires the normal approval flow.
+
+To turn an English goal into an accomplishment, first find the existing piece by stable ID/title, read its complete private revision, and submit an update with that `pieceId` and current `baseRevisionId`. Replace only the milestone state and actual content: use `milestone.state: "accomplishment"`, record the exact result honestly, set a realized stage, and preserve position, incoming/outgoing relationships, and any unchanged fields. If a result misses the target, do not transform the goal; keep it as a blueprint. The agent may prepare and preview this revision but cannot approve or publish it.
 
 ## 20. Connect existing pieces
 
@@ -161,7 +165,7 @@ Never mask a missing production DB with mock data; publish sample work as real; 
 
 ## 29. Known limitations
 
-See `docs/PROJECT_STATUS.md` and `docs/VERIFICATION.md`. No remote Git or public hosting is configured. Native PostgreSQL/Docker and real-browser checks were unavailable initially. Live AI/repository scanning, multi-user login/MFA, media uploading/transcoding, automatic backups, content removal UI, and scale benchmarks are not implemented. Studio shows the latest 100 revisions; API pagination is available. Maximum installation size is 1,000 piece identities.
+See `docs/PROJECT_STATUS.md` and `docs/VERIFICATION.md`. The GitHub source remote is configured, but no public deployment is configured. Native PostgreSQL/Docker and real-browser checks were unavailable initially. Live AI/repository scanning, multi-user login/MFA, media uploading/transcoding, automatic backups, content removal UI, and scale benchmarks are not implemented. Studio shows the latest 100 revisions; API pagination is available. Maximum installation size is 1,000 piece identities.
 
 ## 30. Future extension guidelines
 

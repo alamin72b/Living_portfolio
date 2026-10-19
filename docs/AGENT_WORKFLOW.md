@@ -26,6 +26,18 @@ It must obtain your explicit approval for public portfolio publication, publishi
 
 > I completed [application] at [repository/live URL]. Read the project instructions and inspect the authorized sources. Prepare a project entry with an accurate explanation, real links, relevant media metadata, and evidence of what works. Identify any existing portfolio pieces it actually contains or reuses; propose uncertain links instead of inventing them. Preserve the independent identities of those pieces. Preview the change for my approval.
 
+## 2a. Add an English & Communication goal
+
+> Add this English goal: [the exact intention]. Read AGENTS.md and PROJECT_STATUS.md. Prepare one independent fragment in the `english_communication` area with `milestone.state: "goal"`, `stage: "blueprint"`, and only the optional description, target, and target date I supplied. Do not invent an IELTS score, course, date, certificate, event, evidence, or relationship. Supporting material is optional for this milestone. Show me the private preview and stop before approval or publication.
+
+Use `examples/english-goal.draft.json` as the shape of a draft. The agent can submit it with `npm run agent -- draft examples/english-goal.draft.json`, then validate and preview it. If an English & Communication cluster already exists, read its complete private revision and propose a real `contains` relationship; do not assume every English-related piece belongs in it.
+
+## 2b. Turn an existing goal into an accomplishment
+
+> I achieved this existing English goal: [stable ID or exact title]. Read its complete private revision through `/admin/pieces/:id`, keep its `pieceId`, current `baseRevisionId`, position, and relationships, and prepare a new revision with `milestone.state: "accomplishment"` containing only the actual result I supplied. Set a realized stage, preserve optional supporting material, and show me the private preview. Do not publish it.
+
+If the result does not meet the goal’s target, leave the goal as a blueprint and prepare no transformation unless the owner explicitly describes a separate honest accomplishment. Owner approval and publication remain required. An owner-attested milestone without evidence must never be described as independently verified.
+
 ## 3. Combine multiple creations
 
 > I want [existing creation IDs/titles] to form [new cluster/project]. Read their complete current records through the private API. Explain the intended composition and relationship directions. Create a new container referring to the existing IDs; do not duplicate or overwrite the pieces. Validate that the graph remains acyclic, show the exploded view in a private preview, and wait for my publication approval.

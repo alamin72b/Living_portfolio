@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { ArrowUpRight, Github, Layers } from 'lucide-react';
-import { relationLabels, stageLabels, type Piece, type Workspace } from '@blueprint/shared';
+import {
+  areaLabels,
+  relationLabels,
+  stageLabels,
+  type Piece,
+  type Workspace,
+} from '@blueprint/shared';
 import { Dialog } from './Dialog';
 import { BlueprintGlyph } from './BlueprintGlyph';
 export function DetailPanel({
@@ -22,15 +28,24 @@ export function DetailPanel({
   const connected = data.connections.filter(
     (e) => e.sourceId === piece.id || e.targetId === piece.id,
   );
+  const milestone = piece.milestone;
+  const solid =
+    milestone?.state === 'accomplishment' ||
+    piece.stage === 'working' ||
+    piece.stage === 'evolving';
   return (
     <Dialog title="Inside the creation" onClose={onClose}>
-      <div className={`detail-illustration stage-${piece.stage}`}>
-        <BlueprintGlyph
-          solid={piece.stage === 'working' || piece.stage === 'evolving'}
-          assembly={piece.kind !== 'fragment'}
-        />
+      <div
+        className={`detail-illustration stage-${piece.stage} ${milestone ? `milestone-${milestone.state}` : ''}`}
+      >
+        <BlueprintGlyph solid={solid} assembly={piece.kind !== 'fragment'} />
         <span>
-          {piece.kind} / {piece.stage}
+          {piece.area === 'english_communication' ? areaLabels.english_communication : piece.kind} /{' '}
+          {milestone?.state === 'goal'
+            ? 'goal / blueprint'
+            : milestone?.state === 'accomplishment'
+              ? 'accomplishment / realized'
+              : piece.stage}
         </span>
       </div>
       {piece.attribution === 'neutral-demo' && (
@@ -43,8 +58,52 @@ export function DetailPanel({
       <p className="lead">{piece.summary}</p>
       <span className="state-label">
         <span className="stage-dot" />
-        {stageLabels[piece.stage]}
+        {milestone?.state === 'goal'
+          ? 'An intention taking shape'
+          : milestone?.state === 'accomplishment'
+            ? 'An accomplishment made solid'
+            : stageLabels[piece.stage]}
       </span>
+      {milestone?.state === 'goal' && (
+        <section className="milestone-card milestone-goal-card">
+          <h3>Intention</h3>
+          <p className="prose">{milestone.intention}</p>
+          {milestone.description && <p className="prose">{milestone.description}</p>}
+          {milestone.target && (
+            <p>
+              <strong>Target</strong> {milestone.target}
+            </p>
+          )}
+          {milestone.targetDate && (
+            <p>
+              <strong>Target date</strong> {milestone.targetDate}
+            </p>
+          )}
+        </section>
+      )}
+      {milestone?.state === 'accomplishment' && (
+        <section className="milestone-card milestone-accomplishment-card">
+          <h3>Accomplishment</h3>
+          <p className="prose">{milestone.achievement}</p>
+          {milestone.description && <p className="prose">{milestone.description}</p>}
+          {milestone.result && (
+            <p>
+              <strong>Result</strong> {milestone.result}
+            </p>
+          )}
+          {milestone.completedDate && (
+            <p>
+              <strong>Completed</strong> {milestone.completedDate}
+            </p>
+          )}
+        </section>
+      )}
+      {milestone && piece.evidence.length === 0 && (
+        <p className="notice">
+          Owner-attested. No supporting material was supplied, so this is not independently
+          verified.
+        </p>
+      )}
       <div className="detail-links">
         {piece.repositoryUrl && (
           <a href={piece.repositoryUrl} target="_blank" rel="noopener noreferrer">

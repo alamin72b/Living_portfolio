@@ -14,7 +14,11 @@ import {
 import {
   defaultProfile,
   emptyWorkspace,
+  areas,
+  areaLabels,
   kinds,
+  milestoneLabel,
+  milestoneSummary,
   relationTypes,
   stages,
   type DraftInput,
@@ -30,6 +34,7 @@ const fresh = (): PieceContent => ({
   title: '',
   kind: 'fragment',
   stage: 'experiment',
+  area: 'general',
   summary: '',
   body: '',
   technologies: [],
@@ -42,6 +47,11 @@ const fresh = (): PieceContent => ({
   media: [],
   relationships: [],
 });
+const blankEvidence = () => ({ claim: '', url: '', note: '', visibility: 'private' as const });
+type EntryType = 'creation' | 'goal' | 'accomplishment';
+function short(value: string, max: number) {
+  return value.slice(0, max);
+}
 type DraftList = { revisions: Revision[] };
 export default function Studio({ onClose }: { onClose: () => void }) {
   const [token, setToken] = useState('');
@@ -64,6 +74,7 @@ export default function Studio({ onClose }: { onClose: () => void }) {
   const [pieceId, setPieceId] = useState<string | undefined>();
   const [baseRevisionId, setBaseRevisionId] = useState<string | null>(null);
   const [editing, setEditing] = useState(true);
+  const entryType: EntryType = content.milestone?.state ?? 'creation';
   const api = useCallback(
     <T,>(path: string, method = 'GET', body?: unknown) => request<T>(path, { token, method, body }),
     [token],
@@ -114,6 +125,79 @@ export default function Studio({ onClose }: { onClose: () => void }) {
     setSeenPreview(false);
     setVerified(false);
   }
+  function setEntryType(next: EntryType) {
+    setContent((current) => {
+      const evidence =
+        current.evidence.length === 1 && !current.evidence[0].claim.trim() ? [] : current.evidence;
+      if (next === 'creation')
+        return {
+          ...current,
+          area: 'general',
+          kind: 'fragment',
+          stage: 'experiment',
+          milestone: undefined,
+          evidence: evidence.length ? evidence : [blankEvidence()],
+        };
+      if (next === 'goal')
+        return {
+          ...current,
+          area: 'english_communication',
+          kind: 'fragment',
+          stage: 'blueprint',
+          milestone:
+            current.milestone?.state === 'goal'
+              ? current.milestone
+              : { state: 'goal', intention: '', description: '', target: '', targetDate: '' },
+          evidence,
+        };
+      return {
+        ...current,
+        area: 'english_communication',
+        kind: 'fragment',
+        stage: 'working',
+        milestone:
+          current.milestone?.state === 'accomplishment'
+            ? current.milestone
+            : {
+                state: 'accomplishment',
+                achievement: '',
+                description: '',
+                result: '',
+                completedDate: '',
+              },
+        evidence,
+      };
+    });
+  }
+  function updateMilestone(
+    update: (
+      value: NonNullable<PieceContent['milestone']>,
+    ) => NonNullable<PieceContent['milestone']>,
+  ) {
+    setContent((current) =>
+      current.milestone ? { ...current, milestone: update(current.milestone) } : current,
+    );
+  }
+  function buildPieceContent(): PieceContent {
+    const technologies = technologyInput
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    if (!content.milestone) return { ...content, technologies };
+    return {
+      ...content,
+      title: short(milestoneLabel(content.milestone), 100),
+      summary: short(milestoneSummary(content.milestone), 280),
+      body: content.milestone.description,
+      kind: 'fragment',
+      stage: content.milestone.state === 'goal' ? 'blueprint' : 'working',
+      area: 'english_communication',
+      technologies: [],
+      repositoryUrl: '',
+      liveUrl: '',
+      evidence: content.evidence.filter((e) => e.claim.trim()),
+    };
+  }
   function select(r: Revision) {
     setSelection(r);
     setPreview(null);
@@ -132,13 +216,7 @@ export default function Studio({ onClose }: { onClose: () => void }) {
               entityType,
               pieceId,
               baseRevisionId,
-              content: {
-                ...content,
-                technologies: technologyInput
-                  .split(',')
-                  .map((t) => t.trim())
-                  .filter(Boolean),
-              },
+              content: buildPieceContent(),
             }
           : { entityType, baseRevisionId, content: profile };
       const result = await api<Revision>('/admin/drafts', 'POST', payload);
@@ -407,97 +485,258 @@ export default function Studio({ onClose }: { onClose: () => void }) {
               ) : (
                 <>
                   <label>
-                    Creation title
-                    <input
-                      required
-                      maxLength={100}
-                      value={content.title}
-                      onChange={(e) => field('title', e.target.value)}
-                      placeholder="e.g. My first JavaScript calculator"
-                    />
+                    Piece type
+                    <select
+                      value={entryType}
+                      onChange={(e) => setEntryType(e.target.value as EntryType)}
+                    >
+                      <option value="creation">Independent creation</option>
+                      <option value="goal">English &amp; Communication goal (blueprint)</option>
+                      <option value="accomplishment">
+                        English &amp; Communication accomplishment (realized)
+                      </option>
+                    </select>
                   </label>
-                  <div className="form-row">
-                    <label>
-                      Kind
-                      <select
-                        value={content.kind}
-                        onChange={(e) => field('kind', e.target.value as PieceContent['kind'])}
-                      >
-                        {kinds.map((k) => (
-                          <option key={k}>{k}</option>
-                        ))}
-                      </select>
-                    </label>
-                    <label>
-                      Actual development stage
-                      <select
-                        value={content.stage}
-                        onChange={(e) => field('stage', e.target.value as PieceContent['stage'])}
-                      >
-                        {stages.map((s) => (
-                          <option key={s}>{s}</option>
-                        ))}
-                      </select>
-                    </label>
-                  </div>
-                  <label>
-                    A short description
-                    <textarea
-                      required
-                      maxLength={280}
-                      value={content.summary}
-                      onChange={(e) => field('summary', e.target.value)}
-                      placeholder="What does it actually do?"
-                    />
-                  </label>
-                  <label>
-                    The idea and implementation
-                    <textarea
-                      rows={5}
-                      maxLength={12000}
-                      value={content.body}
-                      onChange={(e) => field('body', e.target.value)}
-                    />
-                  </label>
-                  <div className="form-row">
-                    <label>
-                      Repository URL (optional)
-                      <input
-                        type="url"
-                        value={content.repositoryUrl}
-                        onChange={(e) => field('repositoryUrl', e.target.value)}
-                        placeholder="https://github.com/…"
-                      />
-                    </label>
-                    <label>
-                      Live application (optional)
-                      <input
-                        type="url"
-                        value={content.liveUrl}
-                        onChange={(e) => field('liveUrl', e.target.value)}
-                        placeholder="https://…"
-                      />
-                    </label>
-                  </div>
-                  <label>
-                    Technologies actually used (comma separated)
-                    <input
-                      value={technologyInput}
-                      onChange={(e) => setTechnologyInput(e.target.value)}
-                    />
-                  </label>
+                  {entryType === 'creation' ? (
+                    <>
+                      <label>
+                        Creation title
+                        <input
+                          required
+                          maxLength={100}
+                          value={content.title}
+                          onChange={(e) => field('title', e.target.value)}
+                          placeholder="e.g. My first JavaScript calculator"
+                        />
+                      </label>
+                      <div className="form-row">
+                        <label>
+                          Kind
+                          <select
+                            value={content.kind}
+                            onChange={(e) => field('kind', e.target.value as PieceContent['kind'])}
+                          >
+                            {kinds.map((k) => (
+                              <option key={k}>{k}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          Actual development stage
+                          <select
+                            value={content.stage}
+                            onChange={(e) =>
+                              field('stage', e.target.value as PieceContent['stage'])
+                            }
+                          >
+                            {stages.map((s) => (
+                              <option key={s}>{s}</option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
+                      <label>
+                        Workspace area
+                        <select
+                          value={content.area}
+                          onChange={(e) => field('area', e.target.value as PieceContent['area'])}
+                        >
+                          {areas.map((area) => (
+                            <option key={area} value={area}>
+                              {areaLabels[area]}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label>
+                        A short description
+                        <textarea
+                          required
+                          maxLength={280}
+                          value={content.summary}
+                          onChange={(e) => field('summary', e.target.value)}
+                          placeholder="What does it actually do?"
+                        />
+                      </label>
+                      <label>
+                        The idea and implementation
+                        <textarea
+                          rows={5}
+                          maxLength={12000}
+                          value={content.body}
+                          onChange={(e) => field('body', e.target.value)}
+                        />
+                      </label>
+                      <div className="form-row">
+                        <label>
+                          Repository URL (optional)
+                          <input
+                            type="url"
+                            value={content.repositoryUrl}
+                            onChange={(e) => field('repositoryUrl', e.target.value)}
+                            placeholder="https://github.com/…"
+                          />
+                        </label>
+                        <label>
+                          Live application (optional)
+                          <input
+                            type="url"
+                            value={content.liveUrl}
+                            onChange={(e) => field('liveUrl', e.target.value)}
+                            placeholder="https://…"
+                          />
+                        </label>
+                      </div>
+                      <label>
+                        Technologies actually used (comma separated)
+                        <input
+                          value={technologyInput}
+                          onChange={(e) => setTechnologyInput(e.target.value)}
+                        />
+                      </label>
+                    </>
+                  ) : content.milestone?.state === 'goal' ? (
+                    <div className="milestone-form">
+                      <p className="form-note">
+                        This piece stays a blueprint until you actually accomplish it. It keeps its
+                        identity when you later update it to an accomplishment.
+                      </p>
+                      <label>
+                        What do you intend to achieve?
+                        <input
+                          required
+                          maxLength={500}
+                          value={content.milestone.intention}
+                          onChange={(e) =>
+                            updateMilestone((m) =>
+                              m.state === 'goal' ? { ...m, intention: e.target.value } : m,
+                            )
+                          }
+                          placeholder="e.g. Complete an English course"
+                        />
+                      </label>
+                      <label>
+                        Description (optional)
+                        <textarea
+                          maxLength={1200}
+                          value={content.milestone.description}
+                          onChange={(e) =>
+                            updateMilestone((m) =>
+                              m.state === 'goal' ? { ...m, description: e.target.value } : m,
+                            )
+                          }
+                        />
+                      </label>
+                      <div className="form-row">
+                        <label>
+                          Target (optional)
+                          <input
+                            maxLength={500}
+                            value={content.milestone.target}
+                            onChange={(e) =>
+                              updateMilestone((m) =>
+                                m.state === 'goal' ? { ...m, target: e.target.value } : m,
+                              )
+                            }
+                          />
+                        </label>
+                        <label>
+                          Target date (optional)
+                          <input
+                            type="date"
+                            value={content.milestone.targetDate}
+                            onChange={(e) =>
+                              updateMilestone((m) =>
+                                m.state === 'goal' ? { ...m, targetDate: e.target.value } : m,
+                              )
+                            }
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="milestone-form">
+                      <p className="form-note">
+                        Record only what you actually achieved. If a result does not meet a target,
+                        keep the original goal as a blueprint instead of changing it.
+                      </p>
+                      <label>
+                        What did you actually achieve?
+                        <input
+                          required
+                          maxLength={500}
+                          value={content.milestone?.achievement ?? ''}
+                          onChange={(e) =>
+                            updateMilestone((m) =>
+                              m.state === 'accomplishment'
+                                ? { ...m, achievement: e.target.value }
+                                : m,
+                            )
+                          }
+                          placeholder="e.g. Completed the English course"
+                        />
+                      </label>
+                      <label>
+                        Description (optional)
+                        <textarea
+                          maxLength={1200}
+                          value={content.milestone?.description ?? ''}
+                          onChange={(e) =>
+                            updateMilestone((m) =>
+                              m.state === 'accomplishment'
+                                ? { ...m, description: e.target.value }
+                                : m,
+                            )
+                          }
+                        />
+                      </label>
+                      <div className="form-row">
+                        <label>
+                          Result (optional)
+                          <input
+                            maxLength={500}
+                            value={content.milestone?.result ?? ''}
+                            onChange={(e) =>
+                              updateMilestone((m) =>
+                                m.state === 'accomplishment' ? { ...m, result: e.target.value } : m,
+                              )
+                            }
+                          />
+                        </label>
+                        <label>
+                          Completion date (optional)
+                          <input
+                            type="date"
+                            value={content.milestone?.completedDate ?? ''}
+                            onChange={(e) =>
+                              updateMilestone((m) =>
+                                m.state === 'accomplishment'
+                                  ? { ...m, completedDate: e.target.value }
+                                  : m,
+                              )
+                            }
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  )}
                   <fieldset>
-                    <legend>Evidence for the claims</legend>
+                    <legend>
+                      {entryType === 'creation'
+                        ? 'Evidence for the claims'
+                        : 'Optional supporting material'}
+                    </legend>
                     <p>
-                      Link to work you completed, and explain what it proves. Private evidence stays
-                      in the studio.
+                      {entryType === 'creation'
+                        ? 'Link to work you completed, and explain what it proves. Private evidence stays in the studio.'
+                        : 'Certificates, links, screenshots, and other material are optional. Your owner approval can attest to this milestone.'}
                     </p>
                     {content.evidence.map((e, i) => (
                       <div className="evidence-form" key={i}>
                         <label>
                           Claim supported
                           <input
-                            required
+                            required={entryType === 'creation'}
                             maxLength={500}
                             value={e.claim}
                             onChange={(v) =>
@@ -579,12 +818,7 @@ export default function Studio({ onClose }: { onClose: () => void }) {
                     <button
                       type="button"
                       className="text-button"
-                      onClick={() =>
-                        field('evidence', [
-                          ...content.evidence,
-                          { claim: '', url: '', note: '', visibility: 'private' },
-                        ])
-                      }
+                      onClick={() => field('evidence', [...content.evidence, blankEvidence()])}
                     >
                       <Plus size={14} /> Add evidence
                     </button>

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Added additive English & Communication milestone content: blueprint goals and realized accomplishments share one stable piece identity, position, connections, and revision history.
+- Added concise studio fields for intentions, targets, dates, actual achievements, results, and completion dates. Supporting evidence is optional for milestones and owner-attested status is explicit when none is supplied.
+- Added goal/accomplishment rendering, accessible index filters/search, sketch-to-solid realization motion with reduced-motion support, agent draft examples, and regression coverage for identity, relationships, optional evidence, and approval workflow.
+
 ## 1.0.0 — 19 October 2026
 
 - Built the React spatial workspace with custom drafting visuals, meaningful realization states, accessible search, contextual panels, relationship exploration, and reversible project explosion.

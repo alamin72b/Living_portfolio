@@ -57,6 +57,8 @@ The diagram's revision-to-piece entity association is logical and enforced by se
 
 `pieces.published_revision_id` selects the live content. `site_state.version` increments on every publication, including profiles. A trigger prevents modifying immutable body/identity fields; limited application permissions prevent rewriting evidence snapshots. Layout updates are content revisions. Connection IDs remain deterministic for the same source/target/type.
 
+Piece JSON bodies are backward-compatible: existing records default to the general area when hydrated. English & Communication goals and accomplishments add a discriminated milestone inside the same revision body; no new table or migration is required because the immutable body is already JSONB. Evidence remains normalized and may be empty only for these milestones, while ordinary creations retain the evidence requirement.
+
 ## Workflow and concurrency
 
 ```mermaid

@@ -2,7 +2,7 @@
 
 ## Delivery state
 
-Implemented source release: **1.0.0**, 19 October 2026 (Asia/Dhaka). No genuine achievements have been supplied; the public collection begins empty. The platform is AI-built infrastructure. No public deployment or Git remote is configured.
+Implemented source release: **1.0.0**, 19 October 2026 (Asia/Dhaka). The English & Communication goal-to-accomplishment feature is implemented on `feature/english-goals-accomplishments` and awaits integration review. No genuine goals or achievements have been supplied; the public collection remains empty. The platform is AI-built infrastructure. A GitHub source remote is configured, but there is no public deployment.
 
 ## Implemented
 
@@ -16,12 +16,14 @@ Implemented source release: **1.0.0**, 19 October 2026 (Asia/Dhaka). No genuine 
 - Normalized relational state and immutable revisions. Draft → validate → private preview → exact owner approval → atomic publish. Stale approval and base conflicts are rejected.
 - Cycle/duplicate/self/endpoint validation, stable connection IDs, shared components, and preservation of incoming relationships during updates.
 - Provider-independent preparation boundary, deterministic fact-only proposal creation, preparation-only CLI, no paid AI key requirement.
-- 38 automated tests; 6 discoverable Playwright cases; native PostgreSQL CI configuration; Docker/Caddy deployment files and operating instructions.
+- Additive English & Communication milestones: blueprint goals and realized accomplishments retain one stable identity, position, relationships, and revision history; targets/results and dates are optional; milestone evidence may be empty with explicit owner-attested wording.
+- Goal/accomplishment studio entry, detail/index labels and filters, sketch-to-solid realization motion, agent draft examples, and workflow guidance for updating an existing goal.
+- 45 automated tests; 6 discoverable Playwright cases; native PostgreSQL CI configuration; Docker/Caddy deployment files and operating instructions.
 - Beginner README, comprehensive root AGENTS.md, architecture/design/content/agent/educational/security/operations manuals, status, decisions, changelog, and verification record.
 
 ## Verification status
 
-Clean dependency installation, typecheck, lint, formatting, all 38 unit/component/API tests, production builds, and the compiled API/OpenAPI smoke check passed. The production dependency audit reports zero known advisories. SQL and application-role provisioning ran on PGlite. Native PostgreSQL, Docker/Caddy, browser rendering/E2E, and hosted deployment remain unverified in this environment. See VERIFICATION.md for the explicit boundary and local commands.
+Clean dependency installation, the full `npm run check` gate, `npm run format:check`, and all 45 unit/component/API tests passed for this feature. The previous production dependency audit reports zero known advisories. SQL and application-role provisioning ran on PGlite. Native PostgreSQL, Docker/Caddy, browser rendering/E2E, and hosted deployment remain unverified for this feature branch. See VERIFICATION.md for the explicit boundary and local commands.
 
 ## Intentional limitations
 
@@ -34,6 +36,7 @@ Clean dependency installation, typecheck, lint, formatting, all 38 unit/componen
 - Rate limiting is per-process and does not trust forwarded IP headers; production proxy clients may share a tracked address until trusted-proxy handling is implemented.
 - URL policy intentionally disallows query strings/fragments, so some third-party embed/share URLs need a stable alternative or external link.
 - Secret-pattern screening is incomplete by nature; factual and privacy review remains an owner responsibility.
+- No English goals or accomplishments have been entered; this feature supplies content structure and workflow only. It does not create an English & Communication container or invent portfolio content automatically.
 
 ## Next priorities
 

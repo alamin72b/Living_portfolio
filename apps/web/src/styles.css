@@ -420,6 +420,44 @@ kbd {
   border-color: var(--ink);
   box-shadow: 7px 7px 0 #a7c69d65;
 }
+.piece-node.milestone-goal {
+  border-color: #7f947c;
+}
+.piece-node.milestone-accomplishment {
+  animation: milestone-realization 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.piece-node.milestone-accomplishment .draft-guides {
+  animation: milestone-guides-fade 0.8s ease-out forwards;
+}
+.piece-node.milestone-accomplishment .object-path {
+  animation: milestone-solidify 0.8s ease-out;
+}
+@keyframes milestone-realization {
+  from {
+    filter: saturate(0.5);
+    transform: translateY(4px);
+  }
+  to {
+    filter: saturate(1);
+    transform: translateY(0);
+  }
+}
+@keyframes milestone-guides-fade {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 0.18;
+  }
+}
+@keyframes milestone-solidify {
+  from {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  to {
+    filter: drop-shadow(0 2px 4px #71856d40);
+  }
+}
 .piece-node.highlighted {
   box-shadow:
     0 0 0 3px #a7c69d,
@@ -772,6 +810,30 @@ kbd {
 .detail-illustration.stage-evolving {
   background: var(--ink);
   color: var(--ivory);
+}
+.detail-illustration.milestone-accomplishment {
+  animation: milestone-realization 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.detail-illustration.milestone-accomplishment .draft-guides {
+  animation: milestone-guides-fade 0.8s ease-out forwards;
+}
+.milestone-card {
+  border-left: 2px solid #829e73;
+  background: #eef2e9;
+  padding: 16px 17px 12px;
+  margin: 25px 0;
+}
+.milestone-card h3 {
+  margin-bottom: 14px;
+}
+.milestone-card p:last-child {
+  margin-bottom: 4px;
+}
+.milestone-card strong {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  margin-right: 7px;
+  text-transform: uppercase;
 }
 .detail-illustration svg {
   height: 155px;

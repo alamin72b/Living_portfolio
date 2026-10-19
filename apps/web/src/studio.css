@@ -158,6 +158,17 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+.milestone-form {
+  border-left: 2px solid #829e73;
+  background: #eef2e9;
+  padding: 4px 18px 8px;
+  margin: 22px 0;
+}
+.form-note {
+  color: #536450 !important;
+  font-size: 12px !important;
+  line-height: 1.65;
+}
 .studio fieldset {
   border: 1px solid #c1cdb7;
   margin: 25px 0;

@@ -3,6 +3,7 @@ export { z };
 
 export const kinds = ['fragment', 'cluster', 'project'] as const;
 export const stages = ['blueprint', 'experiment', 'working', 'evolving'] as const;
+export const areas = ['general', 'english_communication'] as const;
 export const relationTypes = [
   'contains',
   'reuses',
@@ -15,6 +16,10 @@ export const stageLabels = {
   experiment: 'An experiment in motion',
   working: 'A working creation',
   evolving: 'Working, still evolving',
+};
+export const areaLabels = {
+  general: 'General workspace',
+  english_communication: 'English & Communication',
 };
 export const relationLabels = {
   contains: 'is made of',
@@ -49,6 +54,7 @@ const optionalUrl = z
   .optional()
   .default('');
 const text = (max: number) => z.string().trim().max(max);
+const calendarDate = z.union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.literal('')]).default('');
 export const positionSchema = z
   .object({
     x: z.number().finite().min(-100000).max(100000),
@@ -69,11 +75,33 @@ export const mediaSchema = z
 export const relationshipSchema = z
   .object({ targetId: z.string().uuid(), type: z.enum(relationTypes), note: text(500).default('') })
   .strict();
+export const milestoneSchema = z.discriminatedUnion('state', [
+  z
+    .object({
+      state: z.literal('goal'),
+      intention: text(500).min(1),
+      description: text(1200).default(''),
+      target: text(500).default(''),
+      targetDate: calendarDate,
+    })
+    .strict(),
+  z
+    .object({
+      state: z.literal('accomplishment'),
+      achievement: text(500).min(1),
+      description: text(1200).default(''),
+      result: text(500).default(''),
+      completedDate: calendarDate,
+    })
+    .strict(),
+]);
 export const pieceSchema = z
   .object({
     title: text(100).min(1),
     kind: z.enum(kinds),
     stage: z.enum(stages),
+    area: z.enum(areas).default('general'),
+    milestone: milestoneSchema.optional(),
     summary: text(280).min(1),
     body: text(12000).default(''),
     technologies: z.array(text(40).min(1)).max(20).default([]),
@@ -82,11 +110,43 @@ export const pieceSchema = z
     notes: text(6000).default(''),
     attribution: z.enum(['owner', 'ai-infrastructure', 'neutral-demo']).default('owner'),
     position: positionSchema,
-    evidence: z.array(evidenceSchema).min(1).max(30),
+    evidence: z.array(evidenceSchema).max(30).default([]),
     media: z.array(mediaSchema).max(12).default([]),
     relationships: z.array(relationshipSchema).max(50).default([]),
   })
-  .strict();
+  .strict()
+  .superRefine((piece, context) => {
+    if (piece.milestone) {
+      if (piece.area !== 'english_communication')
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['area'],
+          message: 'Goals and accomplishments belong to the English & Communication area.',
+        });
+      if (piece.milestone.state === 'goal' && piece.stage !== 'blueprint')
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['stage'],
+          message: 'An English goal must remain a blueprint until it is accomplished.',
+        });
+      if (
+        piece.milestone.state === 'accomplishment' &&
+        piece.stage !== 'working' &&
+        piece.stage !== 'evolving'
+      )
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['stage'],
+          message: 'An English accomplishment must use a realized working or evolving stage.',
+        });
+    } else if (piece.evidence.length === 0) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['evidence'],
+        message: 'A creation needs at least one evidence claim.',
+      });
+    }
+  });
 export const profileSchema = z
   .object({
     name: text(100).min(1),
@@ -119,14 +179,48 @@ export const approvalSchema = z
 export const publishSchema = z.object({ digest: z.string().regex(/^[a-f0-9]{64}$/) }).strict();
 export const ingestionSchema = z
   .object({
-    title: text(100).min(1),
-    summary: text(280).min(1),
-    repositoryUrl: safeUrl,
-    evidenceNote: text(2000).min(1),
+    title: text(100).default(''),
+    summary: text(280).default(''),
+    repositoryUrl: optionalUrl,
+    evidenceNote: text(2000).default(''),
     kind: z.enum(kinds).default('fragment'),
     stage: z.enum(stages).default('experiment'),
+    area: z.enum(areas).default('general'),
+    milestone: milestoneSchema.optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((input, context) => {
+    if (!input.milestone && !input.title)
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['title'],
+        message: 'Title is required.',
+      });
+    if (!input.milestone && !input.summary)
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['summary'],
+        message: 'Summary is required for a creation.',
+      });
+    if (!input.milestone && !input.repositoryUrl)
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['repositoryUrl'],
+        message: 'A repository URL is required for creation ingestion.',
+      });
+    if (!input.milestone && !input.evidenceNote)
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['evidenceNote'],
+        message: 'Evidence notes are required for creation ingestion.',
+      });
+    if (input.milestone && input.area !== 'english_communication')
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['area'],
+        message: 'Goals and accomplishments belong to the English & Communication area.',
+      });
+  });
 
 export type PieceContent = z.infer<typeof pieceSchema>;
 export type Profile = z.infer<typeof profileSchema>;
@@ -172,6 +266,7 @@ export type AgentProposal = {
   reviewNotes: string[];
   inspectedRepository: false;
 };
+export type Milestone = NonNullable<PieceContent['milestone']>;
 export interface ContentPreparationProvider {
   prepare(input: z.infer<typeof ingestionSchema>, workspace: Workspace): Promise<AgentProposal>;
 }
@@ -243,7 +338,11 @@ export function contentWarnings(content: PieceContent): string[] {
   const warnings: string[] = [];
   if (content.attribution === 'neutral-demo')
     warnings.push('Neutral demonstration content must not be presented as an owner achievement.');
-  if (content.evidence.every((e) => !e.url))
+  if (content.milestone && content.evidence.length === 0)
+    warnings.push(
+      'No supporting material was supplied. This will be an owner-attested milestone, not an independently verified result.',
+    );
+  else if (content.evidence.every((e) => !e.url))
     warnings.push('Evidence has no link. Review the supplied notes and original work directly.');
   if (content.evidence.some((e) => e.visibility === 'public'))
     warnings.push('Public evidence claims and URLs will be visible to visitors.');
@@ -288,6 +387,17 @@ export function recommendPosition(workspace: Workspace): { x: number; y: number 
   return { x: 560, y: 30000 };
 }
 
+export function milestoneLabel(milestone: Milestone): string {
+  return milestone.state === 'goal' ? milestone.intention : milestone.achievement;
+}
+
+export function milestoneSummary(milestone: Milestone): string {
+  if (milestone.description) return milestone.description;
+  return milestone.state === 'goal'
+    ? `Goal: ${milestone.intention}`
+    : `Accomplishment: ${milestone.achievement}`;
+}
+
 const sampleIds = [
   '10000000-0000-4000-8000-000000000001',
   '10000000-0000-4000-8000-000000000002',
@@ -310,6 +420,7 @@ function sample(
     title,
     kind,
     stage,
+    area: 'general',
     summary,
     body: 'This is neutral demonstration content. It illustrates the portfolio’s interface and is not an achievement, repository, or application created by the owner.',
     technologies: [],

@@ -146,6 +146,12 @@ Use a dedicated database for this project. If your managed database does not all
 
 Private evidence stays in the studio. Evidence notes are always private. Public description, repository URL, public notes, media URLs, and relationships are public after approval. Do not put private repository URLs into public link fields.
 
+### Add an English goal, then realize it honestly
+
+Choose **New creation**, select **English & Communication goal (blueprint)**, and enter only the intention plus any optional description, target, or target date. Supporting material is optional. Save, validate, inspect the private spatial preview, and use owner approval before publishing.
+
+When you actually accomplish it, open that existing piece and create a new revision. Select **English & Communication accomplishment (realized)** and record the exact achievement, optional result, description, or completion date. The same stable object, position, relationships, and history are retained. If the result misses the target, leave the goal as a blueprint. An entry without supporting material is owner-attested, not independently verified; no IELTS score, course, date, certificate, or event is invented.
+
 You can edit your name, introduction, and contact details using **Edit introduction**. Those changes follow the same approval workflow. No email address or GitHub link was invented for you.
 
 ## Use AI safely

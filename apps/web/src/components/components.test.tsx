@@ -118,6 +118,134 @@ describe('Accessible content experience', () => {
     );
     expect(container.querySelector('[data-stage="working"]')).toBeInTheDocument();
   });
+  it('renders English goals as blueprints and accomplishments as realized objects', () => {
+    const goal = {
+      ...sampleWorkspace.pieces[0],
+      title: 'Complete an English course',
+      summary: 'Goal: Complete an English course.',
+      area: 'english_communication' as const,
+      stage: 'blueprint' as const,
+      milestone: {
+        state: 'goal' as const,
+        intention: 'Complete an English course',
+        description: '',
+        target: 'Finish the course.',
+        targetDate: '',
+      },
+      evidence: [],
+    };
+    const props = {
+      id: goal.id,
+      data: {
+        piece: goal,
+        onOpen: vi.fn(),
+        onExpand: vi.fn(),
+        expanded: false,
+        componentCount: 0,
+        highlight: false,
+      },
+      type: 'piece' as const,
+      dragging: false,
+      selected: false,
+      isConnectable: false,
+      positionAbsoluteX: 0,
+      positionAbsoluteY: 0,
+      zIndex: 0,
+      draggable: false,
+      selectable: true,
+      deletable: false,
+    };
+    const { container, rerender } = render(
+      <ReactFlowProvider>
+        <PieceNode {...props} />
+      </ReactFlowProvider>,
+    );
+    expect(screen.getByText('GOAL / BLUEPRINT')).toBeInTheDocument();
+    expect(container.querySelector('[data-milestone="goal"]')).toBeInTheDocument();
+    const accomplishment = {
+      ...goal,
+      title: 'Completed an English course',
+      stage: 'working' as const,
+      milestone: {
+        state: 'accomplishment' as const,
+        achievement: 'Completed the English course.',
+        description: '',
+        result: 'Completed the final assessment.',
+        completedDate: '',
+      },
+    };
+    rerender(
+      <ReactFlowProvider>
+        <PieceNode {...props} data={{ ...props.data, piece: accomplishment }} />
+      </ReactFlowProvider>,
+    );
+    expect(screen.getByText('ACCOMPLISHMENT / REALIZED')).toBeInTheDocument();
+    expect(container.querySelector('[data-milestone="accomplishment"]')).toBeInTheDocument();
+  });
+  it('shows concise milestone details and honest owner-attested status without evidence', () => {
+    const piece = {
+      ...sampleWorkspace.pieces[0],
+      title: 'Completed an English course',
+      summary: 'Completed an English course.',
+      area: 'english_communication' as const,
+      stage: 'working' as const,
+      milestone: {
+        state: 'accomplishment' as const,
+        achievement: 'Completed the English course.',
+        description: 'The actual result is recorded plainly.',
+        result: 'Completed the final assessment.',
+        completedDate: '2026-10-19',
+      },
+      evidence: [],
+    };
+    render(
+      <DetailPanel
+        piece={piece}
+        data={{ ...sampleWorkspace, pieces: [piece] }}
+        onClose={() => {}}
+        onSelect={() => {}}
+        onExpand={() => {}}
+        expanded={false}
+      />,
+    );
+    expect(screen.getByText('Completed the English course.')).toBeInTheDocument();
+    expect(screen.getByText('Completed the final assessment.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Owner-attested. No supporting material was supplied, so this is not independently verified.',
+      ),
+    ).toBeInTheDocument();
+  });
+  it('keeps milestone goals searchable and directly filterable in the index', () => {
+    const goal = {
+      ...sampleWorkspace.pieces[0],
+      title: 'Achieve an IELTS target',
+      summary: 'Goal: Achieve an IELTS target.',
+      area: 'english_communication' as const,
+      stage: 'blueprint' as const,
+      milestone: {
+        state: 'goal' as const,
+        intention: 'Achieve an IELTS target',
+        description: '',
+        target: 'Record the actual qualifying result.',
+        targetDate: '',
+      },
+      evidence: [],
+    };
+    render(
+      <IndexPanel
+        data={{ ...sampleWorkspace, pieces: [goal] }}
+        onClose={() => {}}
+        onSelect={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'goal' }));
+    expect(screen.getByText('Achieve an IELTS target')).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Search creations'), {
+      target: { value: 'qualifying result' },
+    });
+    expect(screen.getByText('Achieve an IELTS target')).toBeInTheDocument();
+  });
   it('never embeds a preview from an unapproved origin', () => {
     const piece = {
       ...sampleWorkspace.pieces[0],

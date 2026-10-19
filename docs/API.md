@@ -36,6 +36,8 @@ The preview GET records audit/workflow metadata but does not change published co
 
 Draft bodies are discriminated by `entityType`. A new piece sends `entityType: "piece"`, `baseRevisionId: null`, and complete `content`. Updates also send the existing `pieceId` and current base revision. A profile sends `entityType: "profile"`, current profile base revision or null, and the profile content. Examples live in `examples/`.
 
+Piece content may include `area: "english_communication"` and a `milestone`. A goal milestone has `state: "goal"`, `intention`, and optional `description`, `target`, and `targetDate`; an accomplishment has `state: "accomplishment"`, `achievement`, and optional `description`, `result`, and `completedDate`. Milestones require blueprint/realized stages respectively, and their evidence list may be empty. A goal-to-accomplishment update must reuse the existing `pieceId` and current `baseRevisionId`; publication preserves its position, connections, and history.
+
 Approval and publication must happen after independent owner verification. A fingerprint is not factual verification. Any intervening publication changes the workspace version and invalidates the old preview digest.
 
 ## Errors and constraints

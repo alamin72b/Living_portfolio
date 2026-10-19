@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ingestionSchema,
+  milestoneLabel,
+  milestoneSummary,
   recommendPosition,
   type AgentProposal,
   type ContentPreparationProvider,
@@ -14,22 +16,34 @@ export class EvidenceOnlyProvider implements ContentPreparationProvider {
     input: z.infer<typeof ingestionSchema>,
     workspace: Workspace,
   ): Promise<AgentProposal> {
+    const milestone = input.milestone;
+    const title = (milestone ? milestoneLabel(milestone) : input.title).slice(0, 100);
+    const summary = (milestone ? milestoneSummary(milestone) : input.summary).slice(0, 280);
     return {
       inspectedRepository: false,
       reviewNotes: [
-        'Only the supplied title, description, URL, and evidence note were used.',
+        milestone
+          ? 'Only the supplied English & Communication milestone fields were used.'
+          : 'Only the supplied title, description, URL, and evidence note were used.',
         'The repository has not been fetched, inspected, or executed. Ask an authorized external coding agent to inspect it.',
         'No relationships or technology claims have been inferred. Owner verification is required.',
+        ...(milestone && !input.evidenceNote
+          ? [
+              'No supporting material was supplied; the milestone remains owner-attested, not independently verified.',
+            ]
+          : []),
       ],
       draft: {
         entityType: 'piece',
         baseRevisionId: null,
         content: {
-          title: input.title,
-          kind: input.kind,
-          stage: input.stage,
-          summary: input.summary,
-          body: '',
+          title,
+          kind: milestone ? 'fragment' : input.kind,
+          stage: milestone ? (milestone.state === 'goal' ? 'blueprint' : 'working') : input.stage,
+          area: input.area,
+          milestone,
+          summary,
+          body: milestone?.description ?? '',
           technologies: [],
           repositoryUrl: input.repositoryUrl,
           liveUrl: '',
@@ -38,14 +52,16 @@ export class EvidenceOnlyProvider implements ContentPreparationProvider {
           position: recommendPosition(workspace),
           media: [],
           relationships: [],
-          evidence: [
-            {
-              claim: input.summary,
-              url: input.repositoryUrl,
-              note: input.evidenceNote,
-              visibility: 'private',
-            },
-          ],
+          evidence: milestone
+            ? []
+            : [
+                {
+                  claim: input.summary,
+                  url: input.repositoryUrl,
+                  note: input.evidenceNote,
+                  visibility: 'private',
+                },
+              ],
         },
       },
     };

@@ -8,6 +8,7 @@ import {
   publicPiece,
   hasLikelySecret,
   recommendPosition,
+  contentWarnings,
 } from './index.js';
 describe('Portfolio contracts and graph integrity', () => {
   it('accepts neutral samples without turning them into owner work', () => {
@@ -87,5 +88,59 @@ describe('Portfolio contracts and graph integrity', () => {
     expect(
       sampleWorkspace.pieces.every((n) => Math.hypot(n.position.x - p.x, n.position.y - p.y) > 280),
     ).toBe(true);
+  });
+  it('accepts an English goal without compulsory evidence and keeps the target explicit', () => {
+    const {
+      id: _id,
+      revisionId: _revisionId,
+      revisionNumber: _revisionNumber,
+      ...base
+    } = sampleWorkspace.pieces[0];
+    const goal = pieceSchema.parse({
+      ...base,
+      title: 'Complete an English course',
+      summary: 'Goal: Complete an English course',
+      area: 'english_communication',
+      stage: 'blueprint',
+      milestone: {
+        state: 'goal',
+        intention: 'Complete an English course',
+        description: 'Build a stronger foundation for communication.',
+        target: 'Finish the selected course honestly.',
+        targetDate: '',
+      },
+      evidence: [],
+    });
+    expect(goal.evidence).toEqual([]);
+    expect(goal.milestone?.state).toBe('goal');
+    expect(contentWarnings(goal)).toContain(
+      'No supporting material was supplied. This will be an owner-attested milestone, not an independently verified result.',
+    );
+  });
+  it('requires realized stages for accomplishments and preserves exact results', () => {
+    const {
+      id: _id,
+      revisionId: _revisionId,
+      revisionNumber: _revisionNumber,
+      ...base
+    } = sampleWorkspace.pieces[0];
+    const accomplishment = pieceSchema.parse({
+      ...base,
+      title: 'Completed an English course',
+      summary: 'Completed an English course.',
+      area: 'english_communication',
+      stage: 'working',
+      milestone: {
+        state: 'accomplishment',
+        achievement: 'Completed the selected English course.',
+        description: '',
+        result: 'Completed the final assessment.',
+        completedDate: '2026-10-19',
+      },
+      evidence: [],
+    });
+    expect(accomplishment.milestone?.state).toBe('accomplishment');
+    expect(accomplishment.milestone?.result).toBe('Completed the final assessment.');
+    expect(pieceSchema.safeParse({ ...accomplishment, stage: 'blueprint' }).success).toBe(false);
   });
 });

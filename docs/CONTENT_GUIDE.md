@@ -18,6 +18,19 @@ These examples are classifications, not claims that the owner has built them.
 
 Choose blueprint, experiment, working, or evolving based on actual implementation. There is no required order and no completion percentage. A working piece can continue evolving.
 
+## English & Communication goals and accomplishments
+
+Use the optional `area: "english_communication"` field for English, communication, and IELTS-related entries. An independent goal or accomplishment is normally a `fragment`; create a `cluster` titled **English & Communication** when you have a real structure that should contain independent entries. Add a `contains` relationship only when that structure genuinely includes the target. A presentation about a software project may connect to both the English structure and that project when each relationship is real; shared topic or technology alone is not enough.
+
+The studio’s milestone form keeps entry small:
+
+- A `goal` records what you intend to achieve, with optional description, target, and target date. It remains `stage: "blueprint"`.
+- An `accomplishment` records what you actually achieved, with optional description, result, and completion date. It uses a realized `working` or `evolving` stage.
+
+Updating the goal to an accomplishment is a normal revision of the same piece. Keep its stable ID, position, incoming/outgoing relationships, and history. If the actual result misses the target, do not convert the goal; keep the target as a blueprint and record the result only when it is an honest accomplishment entry.
+
+Supporting material is optional for these milestones. An empty evidence list means the owner is attesting to the milestone; the public interface says it is not independently verified. Do not add a score, date, course, certificate, event, or result unless the owner supplied it. Existing creations still require at least one evidence claim.
+
 ## Information and privacy
 
 | Field                                  | Visibility after publication   |

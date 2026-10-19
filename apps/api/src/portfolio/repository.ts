@@ -2,6 +2,7 @@ import { eq, inArray, asc, desc, isNotNull, and, sql } from 'drizzle-orm';
 import { NotFoundException } from '@nestjs/common';
 import {
   defaultProfile,
+  pieceSchema,
   publicPiece,
   type Piece,
   type PieceContent,
@@ -35,20 +36,11 @@ export async function hydrate(
       .orderBy(asc(s.revisionRelationships.id)),
     db.select().from(s.revisionLayouts).where(inArray(s.revisionLayouts.revisionId, ids)),
   ]);
-  return rows.map((r) => ({
-    id: r.id,
-    entityType: r.entityType,
-    entityId: r.entityId,
-    number: r.number,
-    baseRevisionId: r.baseRevisionId,
-    status: r.status,
-    createdAt: r.createdAt,
-    createdBy: r.createdBy,
-    approvalDigest: r.approvalDigest,
-    content:
+  return rows.map((r) => {
+    const content =
       r.entityType === 'profile'
         ? (r.body as Profile)
-        : {
+        : pieceSchema.parse({
             ...(r.body as Omit<PieceContent, 'evidence' | 'media' | 'relationships' | 'position'>),
             position: positions
               .filter((x) => x.revisionId === r.id)
@@ -62,8 +54,20 @@ export async function hydrate(
             relationships: relationships
               .filter((x) => x.revisionId === r.id)
               .map((x) => ({ targetId: x.targetId, type: x.type, note: x.note })),
-          },
-  }));
+          });
+    return {
+      id: r.id,
+      entityType: r.entityType,
+      entityId: r.entityId,
+      number: r.number,
+      baseRevisionId: r.baseRevisionId,
+      status: r.status,
+      createdAt: r.createdAt,
+      createdBy: r.createdBy,
+      approvalDigest: r.approvalDigest,
+      content,
+    };
+  });
 }
 export async function revisionRow(db: Session, id: string) {
   const [row] = await db.select().from(s.revisions).where(eq(s.revisions.id, id));

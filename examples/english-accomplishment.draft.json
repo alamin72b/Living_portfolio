@@ -1,0 +1,29 @@
+{
+  "entityType": "piece",
+  "pieceId": "REPLACE_WITH_EXISTING_GOAL_ID",
+  "baseRevisionId": "REPLACE_WITH_CURRENT_GOAL_REVISION_ID",
+  "content": {
+    "title": "Replace with the exact accomplishment",
+    "kind": "fragment",
+    "stage": "working",
+    "area": "english_communication",
+    "milestone": {
+      "state": "accomplishment",
+      "achievement": "Replace with what you actually achieved.",
+      "description": "",
+      "result": "",
+      "completedDate": ""
+    },
+    "summary": "Replace with a concise description of the actual result.",
+    "body": "",
+    "technologies": [],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "",
+    "attribution": "owner",
+    "position": { "x": 560, "y": 0 },
+    "evidence": [],
+    "media": [],
+    "relationships": []
+  }
+}
