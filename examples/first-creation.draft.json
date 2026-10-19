@@ -1,0 +1,27 @@
+{
+  "entityType": "piece",
+  "baseRevisionId": null,
+  "content": {
+    "title": "Replace with your genuine creation",
+    "kind": "fragment",
+    "stage": "experiment",
+    "summary": "Replace this with a precise description of what you personally implemented.",
+    "body": "Explain the problem, your own contribution, and the current limitations.",
+    "technologies": [],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "",
+    "attribution": "owner",
+    "position": { "x": 560, "y": 0 },
+    "evidence": [
+      {
+        "claim": "Replace with a specific supported claim.",
+        "url": "",
+        "note": "Describe the evidence you and your agent actually reviewed.",
+        "visibility": "private"
+      }
+    ],
+    "media": [],
+    "relationships": []
+  }
+}

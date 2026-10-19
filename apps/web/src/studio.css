@@ -1,0 +1,345 @@
+.studio-login {
+  min-height: 100dvh;
+  padding: 28px 36px;
+  background: radial-gradient(#c9d0c1 0.65px, transparent 0.65px);
+  background-size: 24px 24px;
+}
+.login-card {
+  max-width: 510px;
+  margin: 8vh auto 40px;
+  background: #f4f1e9;
+  padding: 35px;
+  border: 1px solid #c3ccbb;
+}
+.login-card > .eyebrow {
+  display: block;
+  margin: 25px 0;
+}
+.login-card h1 {
+  font-size: 53px;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.login-card h1 em {
+  color: #6c8466;
+}
+.login-card p {
+  font-size: 13px;
+  color: #647169;
+}
+.login-card small {
+  font-size: 10px;
+  line-height: 1.6;
+  display: block;
+  margin-top: 20px;
+  color: #647169;
+}
+.studio label,
+.login-card label {
+  display: block;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 20px 0;
+}
+.studio input,
+.studio textarea,
+.studio select,
+.login-card input {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #bfcab7;
+  background: #fff;
+  border-radius: 3px;
+  color: #262c29;
+  margin-top: 7px;
+  font-size: 13px;
+}
+.studio textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+.studio-header {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  border-bottom: 1px solid #c9d2c1;
+  padding: 0 30px;
+}
+.studio-header strong {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  flex: 1;
+}
+.studio-header strong > span {
+  color: #647169;
+  font-weight: 400;
+}
+.role-badge {
+  font-size: 10px;
+  background: #dce7d4;
+  padding: 5px 9px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.studio-body {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  min-height: calc(100dvh - 76px);
+}
+.studio-sidebar {
+  border-right: 1px solid #c9d2c1;
+  padding: 25px 20px;
+  max-height: calc(100dvh - 76px);
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+}
+.studio-sidebar > .secondary-button {
+  margin-top: 10px;
+}
+.studio-sidebar h2 {
+  font: 600 10px 'DM Sans';
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 28px;
+}
+.studio-sidebar p {
+  font-size: 11px;
+}
+.sidebar-item {
+  display: block;
+  width: 100%;
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #d8decf;
+}
+.sidebar-item strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+}
+.sidebar-item small {
+  display: block;
+  font-size: 9px;
+  color: #647169;
+  margin-top: 6px;
+}
+.sidebar-item:hover,
+.sidebar-item.active {
+  background: #e4ebdc;
+}
+.sidebar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-heading .icon-button {
+  margin-top: 16px;
+}
+.studio-content {
+  padding: 40px 50px 80px;
+  max-width: 1000px;
+}
+.studio-content h1 {
+  font-size: 47px;
+  line-height: 1.05;
+  margin: 16px 0 20px;
+}
+.studio-content .lead {
+  font-size: 16px;
+}
+.studio-content > form > .muted {
+  font-size: 12px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.studio fieldset {
+  border: 1px solid #c1cdb7;
+  margin: 25px 0;
+  padding: 10px 20px 20px;
+}
+.studio legend {
+  font-size: 12px;
+  padding: 0 9px;
+}
+.studio fieldset p {
+  font-size: 11px;
+  color: #647169;
+}
+.evidence-form {
+  padding: 0 0 15px;
+  margin: 10px 0 15px;
+  border-bottom: 1px dashed #bdc8b4;
+}
+.checkbox-label {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 11px !important;
+}
+.checkbox-label input {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px;
+  flex: none;
+  margin: 2px 0 !important;
+  accent-color: #4e6d46;
+}
+.relationship-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+.relationship-form select {
+  margin: 0;
+  min-width: 0;
+  font-size: 11px;
+}
+.studio details {
+  margin: 25px 0;
+  border-top: 1px solid #c4cebb;
+  padding: 16px 0;
+}
+.studio summary {
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.review-json {
+  background: #e9ede3;
+  border: 1px solid #c8d3be;
+  font-size: 11px;
+  line-height: 1.7;
+  padding: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 450px;
+  overflow: auto;
+}
+.workflow-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 26px 0;
+}
+.workflow-track span {
+  border: 1px solid #bbc8b1;
+  border-radius: 3px;
+  padding: 6px 10px;
+  font-size: 9px;
+}
+.workflow-track .current {
+  background: #262c29;
+  color: white;
+}
+.review-actions {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
+}
+.review-actions small {
+  font-size: 10px;
+  color: #647169;
+}
+.studio-content .index-empty {
+  max-width: 600px;
+  padding-top: 70px;
+}
+@media (max-width: 800px) {
+  .studio-body {
+    grid-template-columns: 210px 1fr;
+  }
+  .studio-content {
+    padding: 30px 24px;
+  }
+  .studio-content h1 {
+    font-size: 37px;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .studio-header {
+    padding: 0 18px;
+    gap: 14px;
+  }
+  .studio-header strong {
+    font-size: 9px;
+  }
+  .studio-header strong > span {
+    display: none;
+  }
+  .studio-sidebar {
+    padding: 20px 12px;
+  }
+}
+@media (max-width: 600px) {
+  .studio-body {
+    display: block;
+  }
+  .studio-sidebar {
+    position: static;
+    max-height: 260px;
+    border-bottom: 1px solid #c9d2c1;
+    border-right: 0;
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .studio-sidebar > h2,
+  .studio-sidebar > .sidebar-heading {
+    grid-column: 1/-1;
+    margin: 12px 0 0;
+  }
+  .studio-sidebar > .secondary-button {
+    margin-top: 0;
+  }
+  .studio-sidebar .sidebar-heading h2 {
+    margin-top: 0;
+  }
+  .studio-sidebar .sidebar-heading .icon-button {
+    margin-top: 0;
+  }
+  .sidebar-item {
+    padding: 10px 8px;
+  }
+  .studio-content {
+    padding: 30px 20px 60px;
+  }
+  .studio-login {
+    padding: 20px;
+  }
+  .login-card {
+    padding: 25px;
+    margin-top: 6vh;
+  }
+  .login-card h1 {
+    font-size: 44px;
+  }
+  .studio-header {
+    height: 66px;
+  }
+  .studio-header > .text-button {
+    font-size: 10px;
+  }
+  .studio-header strong {
+    font-size: 8px;
+  }
+  .role-badge {
+    font-size: 8px;
+  }
+  .studio input,
+  .studio textarea,
+  .studio select,
+  .login-card input {
+    font-size: 16px;
+  }
+}
