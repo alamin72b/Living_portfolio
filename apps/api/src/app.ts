@@ -1,9 +1,14 @@
 import 'reflect-metadata';
 import { ForbiddenException, Global, Module, type DynamicModule } from '@nestjs/common';
-import { NestFactory, APP_GUARD } from '@nestjs/core';
+import { NestFactory, APP_GUARD, Reflector } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import {
+  getOptionsToken,
+  getStorageToken,
+  ThrottlerGuard,
+  ThrottlerModule,
+} from '@nestjs/throttler';
 import { json, type NextFunction, type Request, type Response } from 'express';
 import { randomUUID } from 'node:crypto';
 import helmet from 'helmet';
@@ -28,9 +33,10 @@ class CoreModule {
       providers: [
         { provide: CONFIG, useValue: config },
         database ? { provide: Database, useValue: database } : Database,
+        Reflector,
         AuthorizationGuard,
       ],
-      exports: [CONFIG, Database, AuthorizationGuard],
+      exports: [CONFIG, Database, Reflector, AuthorizationGuard],
     };
   }
 }
@@ -61,7 +67,16 @@ export async function createApplication(
       PortfolioModule,
       PublishingModule,
     ],
-    providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
+    providers: [
+      {
+        provide: APP_GUARD,
+        useFactory: (
+          options: ConstructorParameters<typeof ThrottlerGuard>[0],
+          storage: ConstructorParameters<typeof ThrottlerGuard>[1],
+        ) => new ThrottlerGuard(options, storage, new Reflector()),
+        inject: [getOptionsToken(), getStorageToken()],
+      },
+    ],
   })
   class AppModule {}
   const app = await NestFactory.create(AppModule, new ExpressAdapter(), {
