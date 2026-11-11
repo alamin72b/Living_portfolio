@@ -16,7 +16,7 @@
     "dev": "concurrently -k -n contracts,api,web \"npm run dev -w @blueprint/shared\" \"npm run dev -w @blueprint/api\" \"npm run dev -w @blueprint/web\"",
     "dev:web": "npm run build -w @blueprint/shared && npm run dev -w @blueprint/web",
     "dev:api": "npm run build -w @blueprint/shared && npm run dev -w @blueprint/api",
-    "build": "npm run build -w @blueprint/shared && npm run build -w @blueprint/api && npm run build -w @blueprint/web",
+    "build": "npm run build -w @blueprint/shared && npm run build -w @blueprint/api && npm run build -w @blueprint/web && rm -rf dist && mkdir -p dist && cp -r apps/web/dist/* dist/",
     "typecheck": "npm run build -w @blueprint/shared && npm run typecheck --workspaces --if-present",
     "lint": "eslint apps packages scripts tests",
     "format": "prettier --write .",
