@@ -12,6 +12,7 @@ import {
   draftSchema,
   graphErrors,
   hasLikelySecret,
+  positionsOverlap,
   publicPiece,
   type DraftInput,
   type Piece,
@@ -117,6 +118,16 @@ export class PortfolioService {
     const number = await nextRevisionNumber(tx, entityId, input.entityType);
     if (input.entityType === 'piece') {
       const { evidence, media, relationships, position, ...body } = input.content;
+      const occupied = await tx
+        .select({ pieceId: s.layouts.pieceId, x: s.layouts.x, y: s.layouts.y })
+        .from(s.layouts);
+      const conflict = occupied.find(
+        (entry) => entry.pieceId !== entityId && positionsOverlap(position, entry),
+      );
+      if (conflict)
+        throw new BadRequestException(
+          'The proposed canvas position overlaps an existing published creation. Choose an open position before saving this draft.',
+        );
       const targetIds = relationships.map((r) => r.targetId);
       if (targetIds.includes(entityId))
         throw new BadRequestException('A piece cannot refer to itself.');
@@ -191,6 +202,13 @@ export class PortfolioService {
       revisionNumber: r.number,
     };
     const pieces = [...workspace.pieces.filter((p) => p.id !== r.entityId), candidate];
+    const positionConflict = pieces.find(
+      (piece) => piece.id !== candidate.id && positionsOverlap(candidate.position, piece.position),
+    );
+    if (positionConflict)
+      throw new BadRequestException(
+        `The proposed canvas position overlaps “${positionConflict.title}”. Choose an open position and validate again.`,
+      );
     const connections = [
       ...workspace.connections.filter((e) => e.sourceId !== r.entityId),
       ...content.relationships.map((e) => ({

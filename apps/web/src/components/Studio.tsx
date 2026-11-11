@@ -19,6 +19,8 @@ import {
   kinds,
   milestoneLabel,
   milestoneSummary,
+  positionConflicts,
+  recommendPosition,
   relationTypes,
   stages,
   type DraftInput,
@@ -30,7 +32,7 @@ import {
 } from '@blueprint/shared';
 import { request } from '../api';
 import { Workspace } from './Workspace';
-const fresh = (): PieceContent => ({
+const fresh = (position = { x: 560, y: 0 }): PieceContent => ({
   title: '',
   kind: 'fragment',
   stage: 'experiment',
@@ -42,7 +44,7 @@ const fresh = (): PieceContent => ({
   liveUrl: '',
   notes: '',
   attribution: 'owner',
-  position: { x: 560, y: 0 },
+  position,
   evidence: [{ claim: '', url: '', note: '', visibility: 'private' }],
   media: [],
   relationships: [],
@@ -75,6 +77,10 @@ export default function Studio({ onClose }: { onClose: () => void }) {
   const [baseRevisionId, setBaseRevisionId] = useState<string | null>(null);
   const [editing, setEditing] = useState(true);
   const entryType: EntryType = content.milestone?.state ?? 'creation';
+  const openPosition = recommendPosition(data);
+  const positionConflict = data.pieces.find(
+    (piece) => piece.id !== pieceId && positionConflicts(content.position, [piece.position]),
+  );
   const api = useCallback(
     <T,>(path: string, method = 'GET', body?: unknown) => request<T>(path, { token, method, body }),
     [token],
@@ -115,7 +121,7 @@ export default function Studio({ onClose }: { onClose: () => void }) {
   }
   function newPiece() {
     setEntityType('piece');
-    setContent(fresh());
+    setContent(fresh(recommendPosition(data)));
     setTechnologyInput('');
     setPieceId(undefined);
     setBaseRevisionId(null);
@@ -949,6 +955,21 @@ export default function Studio({ onClose }: { onClose: () => void }) {
                         />
                       </label>
                     </div>
+                    {positionConflict && (
+                      <div className="position-warning" role="status">
+                        <p>
+                          This location overlaps <strong>{positionConflict.title}</strong> on the
+                          canvas.
+                        </p>
+                        <button
+                          className="text-button"
+                          type="button"
+                          onClick={() => field('position', openPosition)}
+                        >
+                          Use open position ({openPosition.x}, {openPosition.y})
+                        </button>
+                      </div>
+                    )}
                     {content.media.map((m, i) => (
                       <div className="evidence-form" key={i}>
                         <label>

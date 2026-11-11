@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Handle, Position, useStore, type Node, type NodeProps } from '@xyflow/react';
-import { ArrowUpRight, Layers, Maximize2, Minimize2 } from 'lucide-react';
+import { ArrowUpRight, Layers, Maximize2, Minimize2, MonitorUp } from 'lucide-react';
 import { areaLabels, stageLabels, type Piece } from '@blueprint/shared';
 import { BlueprintGlyph } from './BlueprintGlyph';
 export type PieceFlowNode = Node<
@@ -35,7 +35,7 @@ export const PieceNode = memo(function PieceNode({ data, selected }: NodeProps<P
           : '↗ / EVOLVING';
   return (
     <article
-      className={`piece-node stage-${piece.stage} kind-${piece.kind} detail-${detail} ${milestone ? `milestone-${milestone.state}` : ''} ${selected || highlight ? 'highlighted' : ''}`}
+      className={`piece-node stage-${piece.stage} kind-${piece.kind} detail-${detail} ${piece.liveUrl ? 'has-live-site' : ''} ${milestone ? `milestone-${milestone.state}` : ''} ${selected || highlight ? 'highlighted' : ''}`}
       data-stage={piece.stage}
       data-milestone={milestone?.state ?? 'creation'}
     >
@@ -46,7 +46,13 @@ export const PieceNode = memo(function PieceNode({ data, selected }: NodeProps<P
           {piece.kind === 'project' ? <Layers size={13} /> : <span className="tiny-square" />}
           {piece.area === 'english_communication' ? areaLabels.english_communication : piece.kind}
         </span>
-        <span className="stage-dot" title={stageLabels[piece.stage]} />
+        {piece.liveUrl ? (
+          <span className="live-site-badge" title="Public live website">
+            <MonitorUp size={11} /> LIVE WEBSITE
+          </span>
+        ) : (
+          <span className="stage-dot" title={stageLabels[piece.stage]} />
+        )}
       </div>
       {detail > 0 && <BlueprintGlyph solid={solid} assembly={piece.kind !== 'fragment'} />}
       <button

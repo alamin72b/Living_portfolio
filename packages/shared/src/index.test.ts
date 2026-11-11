@@ -8,6 +8,8 @@ import {
   publicPiece,
   hasLikelySecret,
   recommendPosition,
+  positionConflicts,
+  positionsOverlap,
   contentWarnings,
 } from './index.js';
 describe('Portfolio contracts and graph integrity', () => {
@@ -86,8 +88,16 @@ describe('Portfolio contracts and graph integrity', () => {
   it('suggests an unoccupied position', () => {
     const p = recommendPosition(sampleWorkspace);
     expect(
-      sampleWorkspace.pieces.every((n) => Math.hypot(n.position.x - p.x, n.position.y - p.y) > 280),
-    ).toBe(true);
+      positionConflicts(
+        p,
+        sampleWorkspace.pieces.map((piece) => piece.position),
+      ),
+    ).toBe(false);
+  });
+  it('treats the canvas as occupied rectangular slots', () => {
+    expect(positionsOverlap({ x: 560, y: 0 }, { x: 560, y: 0 })).toBe(true);
+    expect(positionsOverlap({ x: 560, y: 0 }, { x: 920, y: 0 })).toBe(false);
+    expect(positionsOverlap({ x: 560, y: 0 }, { x: 560, y: 300 })).toBe(false);
   });
   it('accepts an English goal without compulsory evidence and keeps the target explicit', () => {
     const {

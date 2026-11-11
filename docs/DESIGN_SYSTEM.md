@@ -43,6 +43,7 @@ These states are not a required sequence, score, or mastery scale. A simple crea
 - Keyboard: `/` opens Index, `?` opens help, `+`/`-` zoom, `0` fits, Home recenters, and arrows pan when the canvas region is focused.
 - Distant objects show identity/kind; middle distance shows the blueprint glyph; close views add the summary. Full media/content lives in the detail panel.
 - Visitors do not mutate public node positions. Their final viewport is saved locally, with validation and a recenter escape route.
+- New and revised pieces use occupied canvas slots with horizontal and vertical clearance, so the API rejects overlapping published positions and the studio can suggest the next open location.
 - Exploded views reposition descendants temporarily, preserving their stable IDs and relationships. Reassembly restores layout and previous viewport.
 
 ## Motion

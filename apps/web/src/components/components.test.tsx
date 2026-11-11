@@ -73,7 +73,7 @@ describe('Accessible content experience', () => {
         expanded={false}
       />,
     );
-    expect(screen.getByRole('link', { name: /Open live site/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Open live website/ })).toHaveAttribute(
       'href',
       'https://example.com/live',
     );

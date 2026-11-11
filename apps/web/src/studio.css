@@ -158,6 +158,23 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+.position-warning {
+  margin: -6px 0 18px;
+  padding: 10px 12px;
+  border-left: 2px solid #a87945;
+  background: #f4eadb;
+  color: #5f4830;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.position-warning p {
+  margin: 0 0 6px;
+}
+.position-warning .text-button {
+  color: #5f4830;
+  text-decoration: underline;
+  font-size: 11px;
+}
 .milestone-form {
   border-left: 2px solid #829e73;
   background: #eef2e9;

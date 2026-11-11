@@ -477,6 +477,21 @@ kbd {
   gap: 6px;
   align-items: center;
 }
+.live-site-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--sage);
+  font-size: 8px;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+}
+.piece-node.has-live-site {
+  border-color: #8eae87;
+}
+.piece-node.stage-evolving.has-live-site {
+  box-shadow: 7px 7px 0 #a7c69d85;
+}
 .tiny-square {
   height: 7px;
   width: 7px;
@@ -561,6 +576,7 @@ kbd {
   color: inherit;
   font-size: 10px;
   text-decoration: none;
+  font-weight: 600;
 }
 .piece-live-link:hover,
 .piece-live-link:focus-visible {

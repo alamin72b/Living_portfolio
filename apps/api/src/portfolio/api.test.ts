@@ -23,6 +23,7 @@ const OWNER = 'test-owner-token-'.repeat(4),
   AGENT = 'test-agent-token-'.repeat(4);
 let app: INestApplication, pg: PGlite | undefined, native: Database | undefined;
 let http: ReturnType<typeof supertest>;
+let nextTestPosition = 0;
 const config: Configuration = {
   NODE_ENV: 'test',
   PORT: 3001,
@@ -36,12 +37,14 @@ const config: Configuration = {
 };
 const makeContent = (title = 'Test fragment'): PieceContent => {
   const { id: _id, revisionId: _rid, revisionNumber: _rn, ...content } = sampleWorkspace.pieces[0];
+  const slot = nextTestPosition++;
   return {
     ...content,
     title,
     attribution: 'owner',
     stage: 'working',
     repositoryUrl: 'https://github.com/example/example',
+    position: { x: 560 + (slot % 8) * 360, y: Math.floor(slot / 8) * 300 },
     evidence: [
       {
         claim: 'A verified behavior',
@@ -263,7 +266,7 @@ describe('Real Nest HTTP API with PostgreSQL-compatible persistence', () => {
     const old = (await http.get('/api/v1/workspace')).body as Workspace;
     const edgeId = old.connections.find((e) => e.sourceId === parent.entityId)!.id;
     const edited = await create(
-      { ...parentContent, title: 'Parent improved', position: { x: 1300, y: -200 } },
+      { ...parentContent, title: 'Parent improved', position: { x: 5000, y: 5000 } },
       parent.entityId,
       parent.id,
     );

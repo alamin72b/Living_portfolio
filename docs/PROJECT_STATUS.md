@@ -12,6 +12,7 @@ Implemented source release: **1.0.0**, 19 October 2026 (Asia/Dhaka). The English
 - Piece detail panels with safe text, source/live links, images/videos, evidence, notes, explicit relationships, and allowlisted isolated opt-in previews.
 - Reversible exploded views that preserve stable component identities and do not mutate published positions.
 - Private owner/agent studio for creation/editing, profile/contact revisions, evidence/media metadata, connection selection, layout coordinates, history, and rollback preparation.
+- Collision-aware canvas placement for new and revised pieces, with an open-position suggestion in the studio and server-side overlap validation.
 - Strict REST/OpenAPI inputs, consistent errors/request IDs, metadata-only logs, CORS, security headers, rate limiting, separate agent/owner roles, and limited application DB permissions.
 - Normalized relational state and immutable revisions. Draft → validate → private preview → exact owner approval → atomic publish. Stale approval and base conflicts are rejected.
 - Cycle/duplicate/self/endpoint validation, stable connection IDs, shared components, and preservation of incoming relationships during updates.

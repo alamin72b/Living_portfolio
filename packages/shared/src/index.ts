@@ -376,12 +376,32 @@ export function descendants(id: string, connections: Connection[]): Set<string> 
   }
   return result;
 }
+
+export const positionSpacing = { x: 360, y: 300 } as const;
+
+export function positionsOverlap(
+  position: { x: number; y: number },
+  other: { x: number; y: number },
+): boolean {
+  return (
+    Math.abs(position.x - other.x) < positionSpacing.x &&
+    Math.abs(position.y - other.y) < positionSpacing.y
+  );
+}
+
+export function positionConflicts(
+  position: { x: number; y: number },
+  occupied: Array<{ x: number; y: number }>,
+): boolean {
+  return occupied.some((other) => positionsOverlap(position, other));
+}
+
 export function recommendPosition(workspace: Workspace): { x: number; y: number } {
   const occupied = workspace.pieces.map((p) => p.position);
   for (let row = 0; row < 100; row++) {
     for (let col = 0; col < 8; col++) {
-      const point = { x: 560 + col * 360, y: row * 300 };
-      if (occupied.every((p) => Math.hypot(p.x - point.x, p.y - point.y) > 280)) return point;
+      const point = { x: 560 + col * positionSpacing.x, y: row * positionSpacing.y };
+      if (!positionConflicts(point, occupied)) return point;
     }
   }
   return { x: 560, y: 30000 };
