@@ -85,6 +85,9 @@ export async function createApplication(
     abortOnError: false,
   });
   app.use((req: Request, res: Response, next: NextFunction) => {
+    if (!req.url.startsWith('/api/') && req.url !== '/api') {
+      req.url = `/api${req.url.startsWith('/') ? '' : '/'}${req.url}`;
+    }
     const requestId = randomUUID();
     res.setHeader('x-request-id', requestId);
     res.setHeader('Cache-Control', 'no-store');
