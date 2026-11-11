@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alamin72b.ami.bd/sitemap.xml
