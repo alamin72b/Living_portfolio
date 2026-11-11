@@ -112,8 +112,8 @@ export function DetailPanel({
           </a>
         )}
         {piece.liveUrl && (
-          <a href={piece.liveUrl} target="_blank" rel="noopener noreferrer">
-            Open creation
+          <a className="live-link" href={piece.liveUrl} target="_blank" rel="noopener noreferrer">
+            Open live site
             <ArrowUpRight size={16} />
           </a>
         )}

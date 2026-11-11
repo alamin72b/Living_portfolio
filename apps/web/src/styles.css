@@ -550,6 +550,22 @@ kbd {
   opacity: 0.75;
   max-width: 220px;
 }
+.piece-live-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin: 0 0 4px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  font-size: 10px;
+  text-decoration: none;
+}
+.piece-live-link:hover,
+.piece-live-link:focus-visible {
+  color: var(--sage);
+}
 .piece-bottom {
   border-top: 1px solid #96a88b66;
   display: flex;
@@ -876,6 +892,11 @@ kbd {
   padding: 10px 13px;
   border: 1px solid #bec8b7;
   border-radius: 3px;
+}
+.detail-links a.live-link {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ivory);
 }
 .prose {
   white-space: pre-wrap;

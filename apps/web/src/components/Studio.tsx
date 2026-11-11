@@ -1091,12 +1091,22 @@ export default function Studio({ onClose }: { onClose: () => void }) {
                         <button
                           className="primary-button"
                           disabled={busy || !verified || !seenPreview}
+                          title={
+                            !seenPreview
+                              ? 'Return from the spatial preview to enable approval.'
+                              : !verified
+                                ? 'Confirm that you checked every claim before approving.'
+                                : undefined
+                          }
                           onClick={approve}
                         >
                           Approve this exact revision
                         </button>
                         {!seenPreview && (
-                          <small>Open the spatial preview and return before approving.</small>
+                          <small className="preview-return-hint" role="status">
+                            Open the spatial preview, then choose “Back to review” to enable
+                            approval.
+                          </small>
                         )}
                       </>
                     )}

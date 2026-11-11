@@ -306,7 +306,9 @@ function WorkspaceInner({
               : 'PRIVATE PREVIEW · These changes are not public'}
           </span>
           <button onClick={mode === 'sample' ? onSample : onClose}>
-            <span>{mode === 'sample' ? 'Back to my workspace' : 'Back to review'}</span>
+            <span>
+              {mode === 'sample' ? 'Back to my workspace' : 'Back to review · enable approval'}
+            </span>
             <X size={15} />
           </button>
         </div>

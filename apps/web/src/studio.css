@@ -259,6 +259,10 @@
   font-size: 10px;
   color: #647169;
 }
+.review-actions .preview-return-hint {
+  max-width: 330px;
+  line-height: 1.5;
+}
 .studio-content .index-empty {
   max-width: 600px;
   padding-top: 70px;

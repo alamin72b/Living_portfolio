@@ -58,6 +58,17 @@ export const PieceNode = memo(function PieceNode({ data, selected }: NodeProps<P
         <ArrowUpRight size={18} />
       </button>
       {detail === 2 && <p className="piece-summary">{piece.summary}</p>}
+      {detail === 2 && piece.liveUrl && (
+        <a
+          className="piece-live-link nodrag"
+          href={piece.liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(event) => event.stopPropagation()}
+        >
+          Visit live site <ArrowUpRight size={13} />
+        </a>
+      )}
       <div className="piece-bottom">
         <span>{stateText}</span>
         {componentCount > 0 && (

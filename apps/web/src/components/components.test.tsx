@@ -58,6 +58,26 @@ describe('Accessible content experience', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'A working component' })).toBeInTheDocument();
   });
+  it('makes a published live site directly reachable from creation details', () => {
+    const piece = {
+      ...sampleWorkspace.pieces[0],
+      liveUrl: 'https://example.com/live',
+    };
+    render(
+      <DetailPanel
+        piece={piece}
+        data={{ ...sampleWorkspace, pieces: [piece] }}
+        onClose={() => {}}
+        onSelect={() => {}}
+        onExpand={() => {}}
+        expanded={false}
+      />,
+    );
+    expect(screen.getByRole('link', { name: /Open live site/ })).toHaveAttribute(
+      'href',
+      'https://example.com/live',
+    );
+  });
   it('opens an exploded view from the detail panel', () => {
     const expand = vi.fn();
     render(
