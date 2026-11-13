@@ -1,0 +1,28 @@
+{
+  "entityType": "piece",
+  "baseRevisionId": null,
+  "content": {
+    "title": "DevFest 2023 Participation",
+    "kind": "fragment",
+    "stage": "working",
+    "area": "general",
+    "summary": "Participation in DevFest 2023 with workshops, networking, and exposure to the wider developer community.",
+    "body": "1–2 December 2023 · Google Developer Groups, Sonargaon. Engaged in workshops and networking with industry professionals, technology enthusiasts, and other developers.",
+    "technologies": [],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "This entry records participation and does not present the event as a personal project or technical achievement.",
+    "attribution": "owner",
+    "position": { "x": 920, "y": -660 },
+    "evidence": [
+      {
+        "claim": "The supplied CV lists participation in DevFest 2023, organized by Google Developer Groups Sonargaon, on 1–2 December 2023.",
+        "url": "",
+        "note": "Source reviewed: the CV content supplied by the owner in this task. No public event page or participation record URL was supplied.",
+        "visibility": "private"
+      }
+    ],
+    "media": [],
+    "relationships": []
+  }
+}

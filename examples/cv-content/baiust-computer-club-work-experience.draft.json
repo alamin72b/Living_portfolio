@@ -1,0 +1,28 @@
+{
+  "entityType": "piece",
+  "baseRevisionId": null,
+  "content": {
+    "title": "Software Engineering Internship · BAIUST Computer Club",
+    "kind": "fragment",
+    "stage": "working",
+    "area": "general",
+    "summary": "A six-month software engineering internship combining React frontend work with an Arduino-based bus tracking system.",
+    "body": "July 2025 – December 2025. Completed a structured six-month Software Engineering Internship Program. Built frontend components using React in a team-based development environment, and designed and implemented a bus tracking system involving Arduino-based hardware and embedded programming.",
+    "technologies": ["React", "Arduino", "Embedded programming"],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "This entry keeps the frontend and embedded contributions together because both were part of the supplied internship description.",
+    "attribution": "owner",
+    "position": { "x": -720, "y": 300 },
+    "evidence": [
+      {
+        "claim": "The supplied CV lists a Software Engineering Internship at BAIUST Computer Club from July 2025 to December 2025, including React frontend work and an Arduino-based bus tracking system.",
+        "url": "",
+        "note": "Source reviewed: the CV content supplied by the owner in this task. No public program, repository, or project URL was supplied.",
+        "visibility": "private"
+      }
+    ],
+    "media": [],
+    "relationships": []
+  }
+}

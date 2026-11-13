@@ -1,0 +1,28 @@
+{
+  "entityType": "piece",
+  "baseRevisionId": null,
+  "content": {
+    "title": "BAIUST CSE Fall Fest 2025 Hackathon",
+    "kind": "fragment",
+    "stage": "working",
+    "area": "general",
+    "summary": "A fifth-place senior-category hackathon result achieved as team leader of Team The Lazy.",
+    "body": "November 2025. Secured 5th place in the senior category of the BAIUST CSE Fall Fest 2025 Hackathon as team leader of Team The Lazy.",
+    "technologies": [],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "The entry records the supplied placement and leadership role without inventing the hackathon project or its technology stack.",
+    "attribution": "owner",
+    "position": { "x": 560, "y": -660 },
+    "evidence": [
+      {
+        "claim": "The supplied CV lists a 5th-place result in the BAIUST CSE Fall Fest 2025 Hackathon senior category as team leader of Team The Lazy.",
+        "url": "",
+        "note": "Source reviewed: the CV content supplied by the owner in this task. No public event or result URL was supplied.",
+        "visibility": "private"
+      }
+    ],
+    "media": [],
+    "relationships": []
+  }
+}

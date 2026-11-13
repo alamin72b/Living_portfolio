@@ -1,0 +1,28 @@
+{
+  "entityType": "piece",
+  "baseRevisionId": null,
+  "content": {
+    "title": "B.Sc. in Computer Science and Engineering",
+    "kind": "fragment",
+    "stage": "evolving",
+    "area": "general",
+    "summary": "Computer Science and Engineering degree in progress at Bangladesh Army International University of Science and Technology, with an approximate CGPA of 3.95 out of 4.00.",
+    "body": "Expected graduation: 2026. Bangladesh Army International University of Science and Technology (BAIUST). Approximate CGPA: 3.95 out of 4.00.",
+    "technologies": [],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "The degree is recorded as in progress because the supplied CV gives an expected graduation year rather than a completion date.",
+    "attribution": "owner",
+    "position": { "x": 920, "y": -360 },
+    "evidence": [
+      {
+        "claim": "The supplied CV lists an ongoing B.Sc. in Computer Science and Engineering at BAIUST, expected graduation in 2026, with an approximate CGPA of 3.95 out of 4.00.",
+        "url": "",
+        "note": "Source reviewed: the CV content supplied by the owner in this task. No public university record URL was supplied.",
+        "visibility": "private"
+      }
+    ],
+    "media": [],
+    "relationships": []
+  }
+}

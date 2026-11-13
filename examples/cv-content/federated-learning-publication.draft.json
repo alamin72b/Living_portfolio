@@ -1,0 +1,28 @@
+{
+  "entityType": "piece",
+  "baseRevisionId": null,
+  "content": {
+    "title": "Federated Learning for Privacy-Preserving Adult Content Detection under Non-IID Data Distributions",
+    "kind": "fragment",
+    "stage": "working",
+    "area": "general",
+    "summary": "A 2026 ICCA publication on privacy-preserving adult content detection with federated learning under non-IID data distributions.",
+    "body": "Published in 2026 at the International Conference on Computing Advancements (ICCA). Authors: Md. Habibur Rahman Sagor, Md. Asif Sadik Elham, Rakib Hasan, Md. Mehedi Hasan Mazumder, Md Al Amin Bhuiyan, and Most Sumaiya Akter.",
+    "technologies": ["Federated learning", "Privacy-preserving machine learning"],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "This is a collaborative publication. The author list is preserved exactly as supplied; the entry does not imply sole authorship.",
+    "attribution": "owner",
+    "position": { "x": 80, "y": -520 },
+    "evidence": [
+      {
+        "claim": "The supplied CV lists Md Al Amin Bhuiyan as a co-author of this paper, published in 2026 at the International Conference on Computing Advancements (ICCA).",
+        "url": "",
+        "note": "Source reviewed: the CV content supplied by the owner in this task. Add the official paper or conference URL only after confirming it is stable and public.",
+        "visibility": "private"
+      }
+    ],
+    "media": [],
+    "relationships": []
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "entityType": "piece",
+  "baseRevisionId": null,
+  "content": {
+    "title": "Front-End Development (React) Training",
+    "kind": "fragment",
+    "stage": "working",
+    "area": "general",
+    "summary": "A 180-hour React and modern web development training completed through Digital University under the Government of Bangladesh ICT Division in Chattogram.",
+    "body": "August 2024 · 180 hours. Focused on modern web development techniques, including React, JavaScript, and responsive UI design.",
+    "technologies": ["React", "JavaScript", "Responsive UI design"],
+    "repositoryUrl": "",
+    "liveUrl": "",
+    "notes": "The training duration and provider wording follow the supplied CV.",
+    "attribution": "owner",
+    "position": { "x": 1640, "y": -360 },
+    "evidence": [
+      {
+        "claim": "The supplied CV lists a 180-hour Front-End Development (React) Training completed in August 2024 through Digital University under the Government of Bangladesh ICT Division in Chattogram.",
+        "url": "",
+        "note": "Source reviewed: the CV content supplied by the owner in this task. No public training record URL was supplied.",
+        "visibility": "private"
+      }
+    ],
+    "media": [],
+    "relationships": []
+  }
+}
