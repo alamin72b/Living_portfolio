@@ -13,7 +13,7 @@
     "liveUrl": "",
     "notes": "This entry keeps the frontend and embedded contributions together because both were part of the supplied internship description.",
     "attribution": "owner",
-    "position": { "x": -720, "y": 300 },
+    "position": { "x": -300, "y": 700 },
     "evidence": [
       {
         "claim": "The supplied CV lists a Software Engineering Internship at BAIUST Computer Club from July 2025 to December 2025, including React frontend work and an Arduino-based bus tracking system.",
